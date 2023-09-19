@@ -1,7 +1,7 @@
 # This code will be moved to scroller
 # Lot of refactoring here
 # App for controlling Adafruit NeoPixel BFF 5x5 LED Grid
-import utime
+import time
 import _thread
 import time
 import neopixel
@@ -128,7 +128,7 @@ class neo_grid():
             for glyf in text:
                 if not self.thread_running: return
                 self.draw(self.get_glyf_bitmap(glyf.lower()))
-                utime.sleep(0.33)
+                time.sleep(0.33)
 
     def marquee(self,bitmap,bg=0,loop=False):
         screen_len=25
@@ -140,9 +140,9 @@ class neo_grid():
         while self.scroll_running:
             self.draw(bitmap,offset,self.palette[bg])
             if offset==0 and bit_len == screen_len:
-                utime.sleep(pause)
+                time.sleep(pause)
             else:
-                utime.sleep(delay)
+                time.sleep(delay)
             offset += 5
             if offset >= bit_len+offset_len:
                 offset=-offset_len
@@ -154,14 +154,14 @@ class neo_grid():
     def draw_random_numbers(self):
         while self.thread_running:
             self.draw(self.get_glyf_bitmap(str(random.randint(0,9))))
-            utime.sleep(0.25)
+            time.sleep(0.25)
     
     def draw_all_glyfs(self):
         while self.thread_running:
             for glyf in ("01234567890abcdefghijklmnopqrstuvwxyz"):
                 if not self.thread_running: return
                 self.draw(self.get_glyf_bitmap(glyf))
-                utime.sleep(0.25)
+                time.sleep(0.25)
 
     def draw_sample_message(self):
         while self.thread_running:
@@ -204,7 +204,7 @@ class neo_grid():
     def stop(self):
         self.thread_running = False
         self.scroll_running = False
-        utime.sleep(0.5)
+        time.sleep(0.5)
         self.scroll_running = True
         print("NeoPixel: Thread stopped. Use grid.start()")
 

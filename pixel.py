@@ -7,7 +7,7 @@ Homepage: https://smol.p1x.in/os/
 
 import machine
 import neopixel
-import utime
+import time
 
 class Pixel:
     HEARTBEAT_PATTERN = [0, 10, 20, 50, 100, 255, 200, 100, 50, 30, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -43,7 +43,7 @@ class Pixel:
                     blue = int((180 * brightness) / 255)
                     self.pixel.fill((red, red, red))
                     self.pixel.write()
-                    utime.sleep(self.HEARTBEAT_DELAY)
+                    time.sleep(self.HEARTBEAT_DELAY)
             except KeyboardInterrupt:
                 break
 
@@ -58,13 +58,13 @@ class Pixel:
                     white = int((255 * brightness) / 255)
                     self.pixel.fill((white, white, white))
                     self.pixel.write()
-                    utime.sleep(self.BREATHE_DELAY)
-                utime.sleep(1)
+                    time.sleep(self.BREATHE_DELAY)
+                time.sleep(1)
                 for brightness in range(255):
                     white = 255 - int((255 * brightness) / 255)
                     self.pixel.fill((white, white, white))
                     self.pixel.write()
-                    utime.sleep(self.BREATHE_DELAY)
+                    time.sleep(self.BREATHE_DELAY)
             except KeyboardInterrupt:
                 break
 

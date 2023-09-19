@@ -7,13 +7,10 @@ Specialized Microcontroller-Oriented Lightweight Operating System
 Homepage: https://smol.p1x.in/os/
 """
 
-import machine
-import uos
-import gc
-import utime
-import neopixel
+
 import math
 import random
+import time
 
 CPU_SPEED_SLOW = 40  # Mhz
 CPU_SPEED_TURBO = 133  # Mhz
@@ -37,7 +34,6 @@ class smolOS:
         self.board = OS_BOARD_NAME
 
         self.cpu_speed_range = {"slow": CPU_SPEED_SLOW, "turbo": CPU_SPEED_TURBO}
-        self.system_led = machine.Pin(SYSTEM_LED_PIN, machine.Pin.OUT)
         self.prompt = OS_PROMPT
         self.turbo = OS_START_TURBO
         self.protected_files = {"boot.py", "smolos.py", "main.py"}
@@ -76,7 +72,6 @@ class smolOS:
         self.last_command = ""
 
     def boot(self):
-        machine.freq(self.cpu_speed_range["turbo"] * 1000000)
         self.clear()
         self.welcome()
         while True:
@@ -141,7 +136,7 @@ class smolOS:
 
     def list(self):
         print("Listing files:")
-        files = uos.listdir()
+        files = os.listdir()
         for i, file in enumerate(files):
             self.info(file, True)
         print("\n\tTotal files: ", len(files))
@@ -168,7 +163,7 @@ class smolOS:
         if not(file_a=="" or file_b==""):
             if file_b not in self.protected_files:
                 try:
-                    uos.rename(file_a,file_b)
+                    os.rename(file_a,file_b)
                     print(f"File {file_a} renamed to {file_b}.")
                 except OSError:
                     self.print_err("Cannot rename file!")
@@ -181,7 +176,7 @@ class smolOS:
         if filename:
             if filename not in self.protected_files:
                 try:
-                    uos.remove(filename)
+                    os.remove(filename)
                     print("File", filename, "removed.")
                 except OSError:
                     self.print_err("Cannot remove file!")
@@ -194,59 +189,40 @@ class smolOS:
         print("\033[2J\033[H", end="")
 
     def stats(self):
-        print("\t\033[0mBoard:\033[1m",self.board)
-        print("\t\033[0mMicroPython:\033[1m",uos.uname().release)
-        print("\t\033[0m"+self.name + ":\033[1m",self.version,"(size:",uos.stat("smolos.py")[6],"bytes)")
-        print("\t\033[0mFirmware:\033[1m",uos.uname().version)
+        print("\t\033[0mBoard:\033[1m My computer")
         turbo_msg = "\033[0mIn power-saving, \033[1mslow mode\033[0m."
         if self.turbo:
             turbo_msg = "\033[0mIn \033[1mturbo mode\033[0m."
-        print("\t\033[0mCPU Speed:\033[1m",machine.freq()*0.000001,"MHz",turbo_msg)
-        print("\t\033[0mFree memory:\033[1m",gc.mem_free(),"bytes")
-        print("\t\033[0mUsed space:\033[1m",uos.stat("/")[0],"bytes")
-        print("\t\033[0mFree space:\033[1m",uos.statvfs("/")[0] * uos.statvfs("/")[3],"bytes")
-        print("\033[0m")
+
 
     def free(self):
         print("Free memory:\n\t\033[1m",gc.mem_free(),"bytes\033[0m")
-        print("\033[0mFree disk space:\n\t\033[1m",uos.statvfs("/")[0] * uos.statvfs("/")[3],"bytes\033[0m")
+        print("\033[0mFree disk space:\n\t\033[1m",os.statvfs("/")[0] * os.statvfs("/")[3],"bytes\033[0m")
 
     def toggle_turbo(self):
         self.turbo = not self.turbo
         if self.turbo:
-            machine.freq(self.cpu_speed_range["turbo"] * 1000000)
+
             self.print_msg("CPU speed changed to turbo "+str(self.cpu_speed_range["turbo"]))
         else:
-            machine.freq(self.cpu_speed_range["slow"] * 1000000)
+
             self.print_msg("CPU speed changed to slow "+str(self.cpu_speed_range["slow"]))
 
     def info(self, filename="", short=False):
         if filename:
             try:
-                file_info = uos.stat(filename)
+                file_info = os.stat(filename)
                 print(f"\t\033[4m{filename}\033[0m", file_info[6], "bytes")
                 if not short:
-                    print("\tCreated:", utime.localtime(file_info[7]))
-                    print("\tModified:", utime.localtime(file_info[8]))
+                    print("\tCreated:", time.localtime(file_info[7]))
+                    print("\tModified:", time.localtime(file_info[8]))
             except OSError:
                 self.print_err("Cannot get info about file!")
         else:
             self.print_err("No filename provided.")
 
     def led(self, command=""):
-        if command in ("on",""):
-            self.system_led.value(1)
-        elif command == "off":
-            self.system_led.value(0)
-        elif command=="boot":
-            for _ in range(UI_BOOT_LED_ROUNDS):
-                self.system_led.value(0)
-                utime.sleep(0.1)
-                self.system_led.value(1)
-                utime.sleep(0.05)
-            self.system_led.value(1)
-        else:
-            self.print_err("Invalid LED command!")
+        self.print_err("no led")
 
     def exe(self, code=""):
         if code:
@@ -270,7 +246,7 @@ class smolOS:
         self.print_err("Unknown function. Type 'help' for list of functions.")
 
     def try_exec_script(self,command):
-        if f"{command}.py" in uos.listdir():
+        if f"{command}.py" in os.listdir():
             self.run(command)
         else:
             self.unknown_function()
@@ -401,7 +377,7 @@ class smolOS:
                         ready = False
                         if new_file:
                             ready = True
-                        if filename in uos.listdir():
+                        if filename in os.listdir():
                             if self.ask_user("You are overwriting an existing file, are you sure?"):
                                 ready = True
                         if ready:

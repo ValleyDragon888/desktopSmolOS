@@ -5,7 +5,7 @@ Demoscene plasma effect for Adafruit NeoPixel BFF 5x5 LED Grid
 Homepage: https://smol.p1x.in/os/
 """
 import machine
-import utime
+import time
 import _thread
 import time
 import neopixel

@@ -7,7 +7,7 @@ Homepage: https://smol.p1x.in/os/
 
 import machine
 import neopixel
-import utime
+import time
 import random
 
 # Define constants
@@ -143,14 +143,14 @@ class Neolife:
                     self.update_world()
                     for _ in range(3):
                         self.draw_world()
-                        utime.sleep(delay)
+                        time.sleep(delay)
                 else:
                     for _ in range(10):
                         self.draw_world()
-                        utime.sleep(delay)
+                        time.sleep(delay)
                     self.random_seed()
                     self.draw_world(NEW_COLOR)
-                    utime.sleep(0.5)
+                    time.sleep(0.5)
             except KeyboardInterrupt:
                 self.pixels.fill(BLANK_COLOR)
                 self.pixels.write()

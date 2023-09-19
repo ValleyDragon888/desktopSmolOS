@@ -5,7 +5,7 @@ Game of Life implementation for smolOS (serial)
 Homepage: https://smol.p1x.in/os/
 """
 
-import utime
+import time
 import time
 import math
 import random
@@ -141,10 +141,10 @@ class Life:
                 if self.check_world():
                     self.update_world()
                     self.draw_world()
-                    utime.sleep(delay)
+                    time.sleep(delay)
                     self.period+=1
                 else:
-                    utime.sleep(1)
+                    time.sleep(1)
                     self.random_seed()
                     self.period=0
             except KeyboardInterrupt:

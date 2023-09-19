@@ -6,7 +6,7 @@ Homepage: https://smol.p1x.in/os/
 """
 import machine
 from machine import Pin, PWM
-import utime
+import time
 import math
 import neopixel
 

@@ -1,5 +1,5 @@
 import machine
-import utime
+import time
 import neopixel
 import math
 from font import Font
@@ -56,9 +56,9 @@ class Scroller():
         while True:
             self.draw(bitmap,offset)
             if offset==0 and bit_len == SCREEN_LEN:
-                utime.sleep(PAUSE)
+                time.sleep(PAUSE)
             else:
-                utime.sleep(DELEAY)
+                time.sleep(DELEAY)
             offset += 5
             if offset > bit_len:
                 offset=-SCREEN_LEN

@@ -6,7 +6,7 @@ Homepage: https://smol.p1x.in/os/
 """
 
 import machine
-import utime
+import time
 import neopixel
 import math
 import random
@@ -103,7 +103,7 @@ class Duck:
         anim_intro = self.animations["buddy"][:4]
         for frame in anim_intro:
             self.draw(frame)
-            utime.sleep(1)
+            time.sleep(1)
 
         anim = self.animations["buddy"][4:]
         self.msg("Swims to you!\nExplain your problem now. Press Ctrl+C to quit.\n")
@@ -111,7 +111,7 @@ class Duck:
             try:
                 frame = random.choice(anim)
                 self.draw(frame)
-                utime.sleep(random.uniform(0.25, 2.0))
+                time.sleep(random.uniform(0.25, 2.0))
             except KeyboardInterrupt:
                 self.bye()
                 break
@@ -121,7 +121,7 @@ class Duck:
         self.msg("Duck swims away...")
         for frame in anim_outro:
             self.draw(frame)
-            utime.sleep(1)
+            time.sleep(1)
             self.pixels.fill((0,0,0))
             self.pixels.write()
         
